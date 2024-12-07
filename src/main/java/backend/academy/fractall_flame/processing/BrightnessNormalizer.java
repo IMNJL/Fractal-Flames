@@ -2,7 +2,6 @@ package backend.academy.fractall_flame.processing;
 
 import backend.academy.fractall_flame.config.Pixel;
 import lombok.experimental.UtilityClass;
-import static backend.academy.fractall_flame.config.Config.RGB;
 
 @UtilityClass
 public class BrightnessNormalizer {

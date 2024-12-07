@@ -28,11 +28,7 @@ public class SingleThreadFractalRenderer extends DefaultFractalRenderer implemen
 
         for (int num = 0; num < samples; ++num) {
             Point point = randomPoint(world);
-            while (point == null) {
-                point = randomPoint(world);
-            }
             double color = SECURE_RANDOM.nextDouble();
-
             for (int step = 0; step < iterPerSample; ++step) {
                 Transformation transformation = variations.get(SECURE_RANDOM.nextInt(variations.size()));
                 point = transformation.apply(point);

@@ -2,11 +2,9 @@ package backend.academy.fractall_flame.processing;
 
 import backend.academy.fractall_flame.config.ColorGradient;
 import backend.academy.fractall_flame.config.Pixel;
-import backend.academy.fractall_flame.config.Point;
-import backend.academy.fractall_flame.config.Rect;
+import java.awt.Color;
 import lombok.Getter;
 import lombok.Setter;
-import java.awt.Color;
 
 @Getter @Setter
 public class FractalImage {
