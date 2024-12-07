@@ -53,7 +53,7 @@ public class FractalGenerator {
 
         // Сохранение изображения
         ImageUtils.save(canvas, Path.of(OUTPUT_PATH), ImageFormat.PNG);
-        log.info(STR."Изображение сохранено в файл: \{OUTPUT_PATH}");
+        log.info("Изображение сохранено в файл: {}", OUTPUT_PATH);
     }
 
     private static Renderer chooseThreadMode(Scanner sc, long seed) {
