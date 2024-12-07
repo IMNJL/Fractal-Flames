@@ -2,8 +2,11 @@ package backend.academy.fractall_flame.processing;
 
 import backend.academy.fractall_flame.config.ColorGradient;
 import backend.academy.fractall_flame.config.Pixel;
+import backend.academy.fractall_flame.config.Point;
+import backend.academy.fractall_flame.config.Rect;
 import lombok.Getter;
 import lombok.Setter;
+import java.awt.Color;
 
 @Getter @Setter
 public class FractalImage {
@@ -52,4 +55,21 @@ public class FractalImage {
     public void addColorGradient(ColorGradient gradient) {
         this.colorGradient = gradient;
     }
+
+    public Color getColorAt(int x, int y, int iterations) {
+        if (!contains(x, y)) {
+            exceptionMethod();
+        }
+
+        Pixel pixel = pixel(x, y);
+
+        // Получаем цвет из градиента
+        if (colorGradient != null) {
+            return colorGradient.apply(x, y, iterations);
+        }
+
+        // Если градиент не задан, возвращаем цвет пикселя
+        return new Color(pixel.r(), pixel.g(), pixel.b());
+    }
+
 }

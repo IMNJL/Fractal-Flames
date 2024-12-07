@@ -25,8 +25,12 @@ public class SingleThreadFractalRenderer extends DefaultFractalRenderer implemen
         int symmetry,
         ColorGradient colorGradient
     ) {
+
         for (int num = 0; num < samples; ++num) {
             Point point = randomPoint(world);
+            while (point == null) {
+                point = randomPoint(world);
+            }
             double color = SECURE_RANDOM.nextDouble();
 
             for (int step = 0; step < iterPerSample; ++step) {

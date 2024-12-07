@@ -29,29 +29,35 @@ public class DefaultFractalRenderer implements Renderer {
         return null;
     }
 
-    Point randomPoint(Rect world) {
+    public Point randomPoint(Rect world) {
+        if (world == null) {
+            throw new IllegalArgumentException("World rectangle cannot be null");
+        }
         double x = world.x() + SECURE_RANDOM.nextDouble() * world.width();
         double y = world.y() + SECURE_RANDOM.nextDouble() * world.height();
         return new Point(x, y);
     }
 
-    Point rotate(Point p, double angle) {
+    public Point rotate(Point p, double angle) {
         double x = p.x() * Math.cos(angle) - p.y() * Math.sin(angle);
         double y = p.x() * Math.sin(angle) + p.y() * Math.cos(angle);
         return new Point(x, y);
     }
 
-    int mapToCanvasX(Rect world, Point p, int canvasWidth) {
+    public int mapToCanvasX(Rect world, Point p, int canvasWidth) {
         return (int) ((p.x() - world.x()) / world.width() * canvasWidth);
     }
 
-    int mapToCanvasY(Rect world, Point p, int canvasHeight) {
+    public int mapToCanvasY(Rect world, Point p, int canvasHeight) {
         return (int) ((p.y() - world.y()) / world.height() * canvasHeight);
     }
 
     public void applySymmetryAndColor(
         FractalImage canvas, Rect world, Point point, int symmetry, ColorGradient colorGradient
     ) {
+        if (point == null) {
+            throw new IllegalArgumentException("Point cannot be null");
+        }
         // Симметрия и цвет
         double angleStep = Math.PI * 2 / symmetry;
         for (int i = 0; i < symmetry; i++) {

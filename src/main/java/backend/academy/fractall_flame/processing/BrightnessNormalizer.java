@@ -13,21 +13,19 @@ public class BrightnessNormalizer {
     public static void normalize(FractalImage image) {
         int maxHitCount = getMaxHitCount(image);
 
-        for (int y = 0; y < image.height(); y++) {
-            for (int x = 0; x < image.width(); x++) {
+        for (int x = 0; x < image.width(); x++) {
+            for (int y = 0; y < image.height(); y++) {
                 Pixel pixel = image.pixel(x, y);
-                double brightness = Math.pow((double) pixel.hitCount() / maxHitCount, 1 / GAMMA);
-
-                int r = (int) (brightness * RGB);
-                int g = (int) (brightness * YELLOWORANGE);
-                int b = (int) (brightness * REDPIGMENT);
-
-                image.setPixel(x, y, new Pixel(r, g, b, pixel.hitCount()));
+                int normalizedRed = (int) ((pixel.hitCount() * GAMMA) / maxHitCount);
+                int normalizedGreen = (pixel.hitCount() * YELLOWORANGE) / maxHitCount;
+                int normalizedBlue = (pixel.hitCount() * REDPIGMENT) / maxHitCount;
+                image.setPixel(x, y, new Pixel(normalizedRed, normalizedGreen, normalizedBlue, pixel.hitCount()));
             }
         }
     }
 
-    private static int getMaxHitCount(FractalImage image) {
+
+    static int getMaxHitCount(FractalImage image) {
         int maxHitCount = 0;
         for (int y = 0; y < image.height(); y++) {
             for (int x = 0; x < image.width(); x++) {
