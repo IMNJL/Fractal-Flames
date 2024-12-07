@@ -1,11 +1,17 @@
 package backend.academy.fractall_flame.config;
 
 import backend.academy.fractall_flame.processing.FractalImage;
-import backend.academy.fractall_flame.processing.FractalRenderer;
+import backend.academy.fractall_flame.processing.MultiThreadFractalRenderer;
+import backend.academy.fractall_flame.processing.Renderer;
+import backend.academy.fractall_flame.processing.SingleThreadFractalRenderer;
 import backend.academy.fractall_flame.utils.ImageFormat;
 import backend.academy.fractall_flame.utils.ImageUtils;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Scanner;
 import lombok.extern.log4j.Log4j2;
+import static backend.academy.fractall_flame.config.Config.MILLISEC;
+import static backend.academy.fractall_flame.config.Config.OUTPUT_PATH;
 
 @Log4j2
 public class FractalGenerator {
@@ -23,6 +29,11 @@ public class FractalGenerator {
         log.debug("Starting fractal generation with parameters:"
             + " width={}, height={}, samples={}", width, height, samples);
 
+        // выбор режима
+        log.info("Выберете режим рендеринга: 1 - однопоточный, 2 - многопоточный>>> ");
+        Scanner sc = new Scanner(System.in, StandardCharsets.UTF_8);
+        Renderer renderer = chooseThreadMode(sc, seed);
+
         // Холст
         FractalImage canvas = FractalImage.create(width, height);
 
@@ -30,14 +41,36 @@ public class FractalGenerator {
         HSBGradient gradient = new HSBGradient();
         canvas.colorGradient(gradient);
 
-        FractalRenderer fractalRenderer = new FractalRenderer(seed);
+        // начало замера
+        long startTime = System.nanoTime();
+
         // Генерация фрактала
-        fractalRenderer.render(canvas, world, Config.TRANSFORMATIONS, samples, iterPerSample, symmetry, gradient);
-        log.info("Генерация завершена.");
+        log.info("Рендеринг начался...");
+        renderer.render(canvas, world, Config.TRANSFORMATIONS, samples, iterPerSample, symmetry, gradient);
+        long endTime = System.nanoTime(); // конец замера
+
+        log.info("Генерация завершена. Время рендеринга: {} мс", (endTime - startTime) / MILLISEC);
 
         // Сохранение изображения
-        String outputPath = "src/main/resources/fractal_heart_11.png";
-        ImageUtils.save(canvas, Path.of(outputPath), ImageFormat.PNG);
-        log.info(STR."Изображение сохранено в файл: \{outputPath}");
+        ImageUtils.save(canvas, Path.of(OUTPUT_PATH), ImageFormat.PNG);
+        log.info(STR."Изображение сохранено в файл: \{OUTPUT_PATH}");
+    }
+
+    private static Renderer chooseThreadMode(Scanner sc, long seed) {
+        int choice = sc.nextInt();
+        return switch (choice) {
+            case 1 -> {
+                log.info("Выбран однопоточный режим.");
+                yield new SingleThreadFractalRenderer(seed);
+            }
+            case 2 -> {
+                log.info("Выбран многопоточный режим.");
+                yield new MultiThreadFractalRenderer(seed);
+            }
+            default -> {
+                log.info("Некорректный ввод, выбран однопоточный режим по умолчанию.");
+                yield new SingleThreadFractalRenderer(seed);
+            }
+        };
     }
 }

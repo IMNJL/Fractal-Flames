@@ -18,9 +18,11 @@ public class Config {
     public static final int WIDTH = 1920;
     public static final int HEIGHT = 1080;
     public static final int SAMPLES = 200_000;
+    public static final int MILLISEC = 1_000_000;
     public static final short ITER_PER_SAMPLE = 150;
     public static final int SYMMETRY = 4;
     public static final long SEED = System.currentTimeMillis();
+    public static final String OUTPUT_PATH = "src/main/resources/fractal_heart_12.png";
 
     public static final Rect WORLD = new Rect(-1.2, -1.5, 2.4, 3.0);
     public static final List<Transformation> TRANSFORMATIONS = List.of(
