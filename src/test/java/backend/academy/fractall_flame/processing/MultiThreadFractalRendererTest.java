@@ -9,7 +9,6 @@ import backend.academy.fractall_flame.transformations.Transformation;
 import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
