@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,11 +38,13 @@ class SingleThreadFractalRendererTest {
 
     @Test
     void testRandomPointGeneration() {
+
+        SecureRandom secureRandom = new SecureRandom();
         // Создаем экземпляр renderer
         SingleThreadFractalRenderer renderer = new SingleThreadFractalRenderer(12345L);
 
         // Генерация случайной точки для переданного мира
-        Point randomPoint = renderer.randomPoint(world);
+        Point randomPoint = renderer.randomPoint(world, secureRandom);
 
         // Проверяем, что точка лежит внутри заданного мира
         assertTrue(world.contains(randomPoint));
@@ -59,7 +62,7 @@ class SingleThreadFractalRendererTest {
     @Test
     void testRenderWithNullCanvas() {
         // Пытаемся вызвать render с null канвасом
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             renderer.render(null, world, transformations, 10, 100, 4, colorGradient);
         });
     }

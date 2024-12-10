@@ -5,6 +5,7 @@ import backend.academy.fractall_flame.transformations.Transformation;
 import org.junit.jupiter.api.Test;
 import java.awt.Color;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +25,7 @@ class ConfigTest {
 
     @Test
     void testConfigSymmetry() {
-        assertEquals(4, Config.SYMMETRY, "Symmetry should be 4");
+        assertEquals(6, Config.SYMMETRY, "Symmetry should be 4");
     }
 
     @Test
@@ -45,11 +46,25 @@ class ConfigTest {
 
     @Test
     void testConfigTransformations() {
-        List<Transformation> transformations = Config.TRANSFORMATIONS;
+        List<Transformation> transformations = Config.DEFAULT_TRANSFORMATIONS;
         assertEquals(5, transformations.size(), "There should be 5 transformations");
         assertTrue(
             transformations.stream().anyMatch(t -> t instanceof HeartTransformation),
             "Transformations should include HeartTransformation"
         );
+    }
+
+    @Test
+    void testGetIntInput_ValidInput() {
+        Scanner mockScanner = new Scanner("42"); // Пользователь вводит 42
+        int result = Config.getIntInput(mockScanner, 10);
+        assertEquals(42, result);
+    }
+
+    @Test
+    void testGetIntInput_InvalidInput() {
+        Scanner mockScanner = new Scanner("abc"); // Некорректный ввод
+        int result = Config.getIntInput(mockScanner, 10);
+        assertEquals(10, result); // Значение по умолчанию
     }
 }

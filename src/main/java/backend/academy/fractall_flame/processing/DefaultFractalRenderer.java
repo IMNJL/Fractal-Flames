@@ -8,16 +8,15 @@ import backend.academy.fractall_flame.transformations.Transformation;
 import java.security.SecureRandom;
 import java.util.List;
 
-@SuppressWarnings("PREDICTABLE_RANDOM")
-public class DefaultFractalRenderer implements Renderer {
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom(); // Singleton
+@SuppressWarnings({"PREDICTABLE_RANDOM", "ParameterNumber"})
+public abstract class DefaultFractalRenderer {
+    protected final SecureRandom secureRandom = new SecureRandom(); // Singleton
 
     public DefaultFractalRenderer(long seed) {
-        SECURE_RANDOM.setSeed(seed);
+        secureRandom.setSeed(seed);
     }
 
-    @Override
-    public FractalImage render(
+    public abstract FractalImage render(
         FractalImage canvas,
         Rect world,
         List<Transformation> variations,
@@ -25,16 +24,14 @@ public class DefaultFractalRenderer implements Renderer {
         int iterPerSample,
         int symmetry,
         ColorGradient colorGradient
-    ) {
-        return null;
-    }
+    );
 
-    public Point randomPoint(Rect world) {
+    public Point randomPoint(Rect world, SecureRandom random) {
         if (world == null) {
             throw new IllegalArgumentException("World rectangle cannot be null");
         }
-        double x = world.x() + SECURE_RANDOM.nextDouble() * world.width();
-        double y = world.y() + SECURE_RANDOM.nextDouble() * world.height();
+        double x = world.x() + secureRandom.nextDouble() * world.width();
+        double y = world.y() + secureRandom.nextDouble() * world.height();
         return new Point(x, y);
     }
 
@@ -55,9 +52,6 @@ public class DefaultFractalRenderer implements Renderer {
     public void applySymmetryAndColor(
         FractalImage canvas, Rect world, Point point, int symmetry, ColorGradient colorGradient
     ) {
-        if (point == null) {
-            throw new IllegalArgumentException("Point cannot be null");
-        }
         // Симметрия и цвет
         double angleStep = Math.PI * 2 / symmetry;
         for (int i = 0; i < symmetry; i++) {
@@ -76,6 +70,31 @@ public class DefaultFractalRenderer implements Renderer {
                     colorGradient.apply(rotated.x(), rotated.y(), iterations),
                     iterations
                 ));
+            }
+        }
+    }
+
+    public void processing(
+        FractalImage canvas,
+        Rect world,
+        List<Transformation> variations,
+        int iterPerSample,
+        int symmetry,
+        ColorGradient colorGradient,
+        int start,
+        int end
+    ) {
+
+        for (int num = start; num < end; ++num) {
+            Point point = randomPoint(world, secureRandom);
+            double color = secureRandom.nextDouble();
+
+            for (int step = 0; step < iterPerSample; ++step) {
+                Transformation transformation = variations.get(secureRandom.nextInt(variations.size()));
+                point = transformation.apply(point);
+                color = (color + secureRandom.nextDouble()) / 2.0;
+
+                applySymmetryAndColor(canvas, world, point, symmetry, colorGradient);
             }
         }
     }
