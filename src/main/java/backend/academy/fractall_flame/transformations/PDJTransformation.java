@@ -2,12 +2,13 @@ package backend.academy.fractall_flame.transformations;
 
 import backend.academy.fractall_flame.config.Point;
 import java.awt.Color;
+import lombok.Getter;
 
 public class PDJTransformation implements Transformation {
-    private final double p1;
-    private final double p2;
-    private final double p3;
-    private final double p4;
+    @Getter private final double p1;
+    @Getter private final double p2;
+    @Getter private final double p3;
+    @Getter private final double p4;
 
     public PDJTransformation(double p1, double p2, double p3, double p4) {
         this.p1 = p1;

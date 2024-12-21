@@ -25,6 +25,10 @@ import static backend.academy.fractall_flame.config.Config.getDoubleInput;
 
 @Log4j2
 public class TransformationConfig extends FractalGenerator {
+    private static final int ONE = 1;
+    private static final String YESS = "y";
+    private static final String READY = "готово";
+
     public static List<Transformation> configureTransformations(Scanner sc) {
         List<Transformation> transformations = Config.getDefaultTransformations();
         log.info("Список доступных трансформаций по умолчанию: ");
@@ -35,14 +39,14 @@ public class TransformationConfig extends FractalGenerator {
         log.info("Хотите изменить список трансформаций? (y/n) >>> ");
         String response = sc.next();
 
-        if (!response.equals("y")) {
+        if (!YESS.equals(response)) {
             return transformations; // Используем трансформации по умолчанию
         }
 
         while (true) {
             log.info("Введите номер трансформации, которую хотите удалить, или 'готово' для завершения: ");
             String input = sc.nextLine().trim().toLowerCase();
-            if (input.equals("готово")) {
+            if (READY.equals(input)) {
                 break;
             }
             try {
@@ -59,7 +63,7 @@ public class TransformationConfig extends FractalGenerator {
         }
 
         log.info("Хотите добавить пользовательскую трансформацию? (y/n) >>> ");
-        if (sc.nextLine().trim().toLowerCase().equals("y")) {
+        if (YESS.equals(sc.nextLine().trim().toLowerCase())) {
             addCustomTransformation(transformations, sc);
         }
 
@@ -68,6 +72,7 @@ public class TransformationConfig extends FractalGenerator {
         return transformations;
     }
 
+    @SuppressWarnings("CLI_CONSTANT_LIST_INDEX")
     static void addCustomTransformation(List<Transformation> transformations, Scanner sc) {
         log.info("Введите тип трансформации (Linear, PDJ, Swirl, Spherical, Heart): >>> ");
         String type = sc.nextLine().trim().toLowerCase();
@@ -76,12 +81,14 @@ public class TransformationConfig extends FractalGenerator {
             case "linear" -> {
                 log.info("Введите параметры a, b, c, d через пробел (например: 1.0 0.0 0.0 1.0): >>> ");
                 double[] params = getDoubleArrayInput(sc, LINEAR_COEF);
-                transformations.add(new LinearTransformation(params[0], params[1], params[2], params[THIRD_PARAM]));
+                transformations.add(new LinearTransformation(params[ONE - 1], params[ONE], params[ONE + 1],
+                params[THIRD_PARAM]));
             }
             case "pdj" -> {
                 log.info("Введите параметры p1, p2, p3, p4 через пробел: >>> ");
                 double[] params = getDoubleArrayInput(sc, PDJ_COEF);
-                transformations.add(new PDJTransformation(params[0], params[1], params[2], params[THIRD_PARAM]));
+                transformations.add(new PDJTransformation(params[ONE - 1], params[ONE], params[ONE + 1],
+                params[THIRD_PARAM]));
             }
             case "swirl" -> {
                 log.info("Введите параметр factor (например: 0.8): >>> ");
@@ -102,7 +109,7 @@ public class TransformationConfig extends FractalGenerator {
                 double[] params = getDoubleArrayInput(sc, POPCORN_COEF);
                 log.info("Введите цвeт (напримeр: BLUE, RED, GREEN): >>> ");
                 Color color = getColorInput(sc);
-                transformations.add(new PopcornTransformation(params[0], params[1], color));
+                transformations.add(new PopcornTransformation(params[ONE - 1], params[ONE], color));
             }
             case "sinusoidal" -> {
                 log.info("Введите цвет (например: BLUE, RED, GREEN): >>> ");
@@ -117,7 +124,7 @@ public class TransformationConfig extends FractalGenerator {
         }
     }
 
-    private static double[] getDoubleArrayInput(Scanner sc, int length) {
+    public static double[] getDoubleArrayInput(Scanner sc, int length) {
         double[] params = new double[length];
         try {
             String[] input = sc.nextLine().trim().split("\\s+");

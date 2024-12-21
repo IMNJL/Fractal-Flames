@@ -2,10 +2,11 @@ package backend.academy.fractall_flame.transformations;
 
 import backend.academy.fractall_flame.config.Point;
 import java.awt.Color;
+import lombok.Getter;
 
 public class SwirlTransformation implements Transformation {
 
-    private final double factor;
+    @Getter private final double factor;
 
     public SwirlTransformation(double factor) {
         this.factor = factor;
