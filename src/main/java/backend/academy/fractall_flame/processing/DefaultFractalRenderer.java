@@ -26,12 +26,12 @@ public abstract class DefaultFractalRenderer {
         ColorGradient colorGradient
     );
 
-    public Point randomPoint(Rect world, SecureRandom SECURE_RANDOM) {
+    public Point randomPoint(Rect world, SecureRandom secureRandom) {
         if (world == null) {
             throw new IllegalArgumentException("World rectangle cannot be null");
         }
-        double x = world.x() + SECURE_RANDOM.nextDouble() * world.width();
-        double y = world.y() + SECURE_RANDOM.nextDouble() * world.height();
+        double x = world.x() + secureRandom.nextDouble() * world.width();
+        double y = world.y() + secureRandom.nextDouble() * world.height();
         return new Point(x, y);
     }
 

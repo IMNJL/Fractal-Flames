@@ -29,7 +29,7 @@ import static backend.academy.fractall_flame.config.Config.getLongInput;
 
 
 @Log4j2
-@SuppressWarnings({"FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY", "LSC_LITERAL_STRING_COMPARISON"})
+@SuppressWarnings({"FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY", "LSC_LITERAL_STRING_COMPARISON", "CLI_CONSTANT_LIST_INDEX"})
 public class FractalGenerator {
     private static Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
     private static final String INPUT_LINE = " >>> ";
