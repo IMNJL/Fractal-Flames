@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 import lombok.extern.log4j.Log4j2;
+import lombok.Getter;
+import lombok.Setter;
 import static backend.academy.fractall_flame.config.Config.HEIGHT;
 import static backend.academy.fractall_flame.config.Config.ITER_PER_SAMPLE;
 import static backend.academy.fractall_flame.config.Config.MILLISEC;
@@ -31,7 +33,7 @@ import static backend.academy.fractall_flame.config.Config.getLongInput;
 @Log4j2
 @SuppressWarnings({"FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY", "LSC_LITERAL_STRING_COMPARISON", "CLI_CONSTANT_LIST_INDEX"})
 public class FractalGenerator {
-    private static Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
+    @Getter @Setter private static Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
     private static final String INPUT_LINE = " >>> ";
     private static final String YES = "y";
 

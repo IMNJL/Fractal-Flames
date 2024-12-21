@@ -24,70 +24,65 @@ class FractalGeneratorTest {
 
     @BeforeEach
     void setUp() {
+    
         generator = new FractalGenerator();
     }
 
     @Test
-    void testGenerateFractalWithDefaults() {
-        // Подготовка моков
-        when(mockScanner.nextLine())
-            .thenReturn("y") // Использование параметров по умолчанию
-            .thenReturn("2");
-        when(mockScanner.next()).thenReturn("n"); // Не изменяем список трансформаций
+    void testChooseThreadMode() {
+        Scanner mockScanner = mock(Scanner.class);
+        when(mockScanner.nextInt()).thenReturn(2); // Выбираем многопоточный режим
 
-        // Вызов метода
-        generator.generateFractal();
+        FractalGenerator.scanner(mockScanner); // Подменяем Scanner
+        FractalGenerator generator = new FractalGenerator();
+        DefaultFractalRenderer renderer = generator.chooseThreadMode(123L);
 
-        // Проверки
-        verify(mockScanner, times(1)).nextLine(); // Проверяем, что nextLine() вызван
-    }
-
-    @Test
-    void testGenerateFractalWithCustomParameters() {
-        // Подготовка моков
-        when(mockScanner.nextLine()).thenReturn("n"); // Пользовательский ввод
-        when(mockScanner.nextInt()).thenReturn(1); // Выбор однопоточного режима
-        when(mockScanner.next()).thenReturn(""); // Игнор дополнительных вызовов
-
-        // Заглушки для ввода параметров
-        when(mockScanner.nextLine())
-            .thenReturn("800") // Ширина
-            .thenReturn("600") // Высота
-            .thenReturn("10")  // Количество выборок
-            .thenReturn("100") // Итерации на выборку
-            .thenReturn("2")   // Симметрия
-            .thenReturn("12345"); // seed
-
-        // Вызов метода
-        generator.generateFractal();
-
-        // Проверки
-        verify(mockScanner, times(1)).next();
-    }
-
-    @Test
-    void testChooseThreadModeSingleThread() {
-        // Подготовка моков
-        when(mockScanner.nextInt()).thenReturn(1);
-
-        // Вызов метода
-        DefaultFractalRenderer renderer = FractalGenerator.chooseThreadMode(12345L);
-
-        // Проверка
-        assertTrue(renderer instanceof SingleThreadFractalRenderer);
-        verify(mockScanner, times(1)).nextInt();
-    }
-
-    @Test
-    void testChooseThreadModeMultiThread() {
-        // Подготовка моков
-        when(mockScanner.nextInt()).thenReturn(2);
-
-        // Вызов метода
-        DefaultFractalRenderer renderer = FractalGenerator.chooseThreadMode(12345L);
-
-        // Проверка
         assertTrue(renderer instanceof MultiThreadFractalRenderer);
         verify(mockScanner, times(1)).nextInt();
+    }
+
+    @Test
+    void testChooseThreadMode_DefaultOnInvalidInput() {
+        // Мок для Scanner
+        Scanner mockScanner = mock(Scanner.class);
+        when(mockScanner.nextInt()).thenReturn(99); // Некорректный ввод
+
+        // Установка мока
+        FractalGenerator.scanner(mockScanner);
+
+        // Выполнение метода
+        FractalGenerator generator = new FractalGenerator();
+        DefaultFractalRenderer renderer = generator.chooseThreadMode(123L);
+
+        // Проверка
+        assertTrue(renderer instanceof SingleThreadFractalRenderer, "Ожидался SingleThreadFractalRenderer");
+        verify(mockScanner, times(1)).nextInt();
+    }
+
+    @Test
+    void testGenerateFractal_WithCustomParameters() {
+        // Мок для Scanner
+        Scanner mockScanner = mock(Scanner.class);
+        when(mockScanner.nextLine())
+            .thenReturn("n") // Пользователь не хочет использовать параметры по умолчанию
+            .thenReturn("800") // Ширина
+            .thenReturn("600") // Высота
+            .thenReturn("500") // Количество выборок
+            .thenReturn("50") // Итерации на выборку
+            .thenReturn("4") // Симметрии
+            .thenReturn("123456789") // Seed
+            .thenReturn("0.0") // Левая граница X
+            .thenReturn("0.0") // Верхняя граница Y
+            .thenReturn("2.0") // Ширина мира
+            .thenReturn("2.0"); // Высота мира
+
+        FractalGenerator.scanner(mockScanner);
+
+        // Выполнение метода
+        FractalGenerator generator = new FractalGenerator();
+        generator.generateFractal();
+
+        // Проверка, что Scanner вызывался нужное количество раз
+        verify(mockScanner, times(1)).next();
     }
 }
