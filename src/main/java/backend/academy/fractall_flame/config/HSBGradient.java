@@ -12,7 +12,7 @@ public class HSBGradient implements ColorGradient {
     public Color apply(double x, double y, int iterations) {
         double normalizedIter = Math.min(1.0, iterations / STEP);
         float hue = (float) ((x * y * HALF + normalizedIter) % 1.0);
-        float brightness = Math.max(HALFF, (float) Math.sqrt(iterations / (STEP / 2)));
+        var brightness = (float) Math.max(HALFF, Math.sqrt(iterations / (STEP / 2)));
         return Color.getHSBColor(hue, SATURATION, brightness);
     }
 }

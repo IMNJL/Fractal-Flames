@@ -1,25 +1,72 @@
 package backend.academy.fractall_flame.config;
 
+import backend.academy.fractall_flame.processing.BrightnessNormalizer;
 import backend.academy.fractall_flame.processing.DefaultFractalRenderer;
+import backend.academy.fractall_flame.processing.FractalImage;
+import backend.academy.fractall_flame.transformations.Transformation;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.security.SecureRandom;
+import java.util.List;
+
+import static backend.academy.fractall_flame.processing.DefaultFractalRenderer.SECURE_RANDOM;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultFractalRendererTest {
 
+    @BeforeEach
+    void setUp() {
+        render();
+    }
+
+    DefaultFractalRenderer render() {
+        return new DefaultFractalRenderer(12345L) {
+            @Override
+            public FractalImage render(
+                FractalImage canvas,
+                Rect world,
+                List<Transformation> variations,
+                int samples,
+                int iterPerSample,
+                int symmetry,
+                ColorGradient colorGradient
+            ) {
+                for (int num = 0; num < samples; ++num) {
+                    Point point = randomPoint(world, SECURE_RANDOM);
+                    double color = SECURE_RANDOM.nextDouble();
+                    for (int step = 0; step < iterPerSample; ++step) {
+                        Transformation transformation = variations.get(SECURE_RANDOM.nextInt(variations.size()));
+                        point = transformation.apply(point);
+                        color = (color + SECURE_RANDOM.nextDouble()) / 2.0;
+
+                        applySymmetryAndColor(canvas, world, point, symmetry, colorGradient);
+                    }
+                }
+
+                BrightnessNormalizer.normalize(canvas);
+                return canvas;
+            }
+        };
+    }
+
     @Test
     void testRandomPoint() {
-        DefaultFractalRenderer renderer = new DefaultFractalRenderer(12345L);
+
+        SecureRandom SecureRandom = new SecureRandom();
+
+        DefaultFractalRenderer renderer = render();
+
         Rect world = new Rect(-1.0, -1.0, 2.0, 2.0);
 
-        Point point = renderer.randomPoint(world);
+        Point point = renderer.randomPoint(world, SecureRandom);
 
         assertTrue(world.contains(point), "Random point should be within the world bounds");
     }
 
     @Test
     void testRotatePoint() {
-        DefaultFractalRenderer renderer = new DefaultFractalRenderer(12345L);
+        DefaultFractalRenderer renderer = render();
         Point point = new Point(1.0, 0.0);
 
         Point rotated = renderer.rotate(point, Math.PI / 2); // Rotate 90 degrees
@@ -30,7 +77,7 @@ class DefaultFractalRendererTest {
 
     @Test
     void testMappingToCanvas() {
-        DefaultFractalRenderer renderer = new DefaultFractalRenderer(12345L);
+        DefaultFractalRenderer renderer = render();
         Rect world = new Rect(-1.0, -1.0, 2.0, 2.0);
         Point point = new Point(0.0, 0.0);
 

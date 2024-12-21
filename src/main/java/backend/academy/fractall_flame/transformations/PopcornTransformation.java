@@ -6,13 +6,12 @@ import java.awt.Color;
 public class PopcornTransformation implements Transformation {
     private final double a;
     private final double b;
-    private final Color color;
+
     private static final int CONST = 3;
 
     public PopcornTransformation(double a, double b, Color color) {
         this.a = a;
         this.b = b;
-        this.color = color;
     }
 
     @Override

@@ -1,16 +1,12 @@
 package backend.academy.fractall_flame.processing;
 
 import backend.academy.fractall_flame.config.ColorGradient;
-import backend.academy.fractall_flame.config.Point;
 import backend.academy.fractall_flame.config.Rect;
 import backend.academy.fractall_flame.transformations.Transformation;
-import java.security.SecureRandom;
 import java.util.List;
 
-@SuppressWarnings("PREDICTABLE_RANDOM")
-public class SingleThreadFractalRenderer extends DefaultFractalRenderer implements Renderer {
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom(); // Singleton
-
+@SuppressWarnings({"PREDICTABLE_RANDOM", "ParameterNumber"})
+public class SingleThreadFractalRenderer extends DefaultFractalRenderer {
     public SingleThreadFractalRenderer(long seed) {
         super(seed);
     }
@@ -26,17 +22,8 @@ public class SingleThreadFractalRenderer extends DefaultFractalRenderer implemen
         ColorGradient colorGradient
     ) {
 
-        for (int num = 0; num < samples; ++num) {
-            Point point = randomPoint(world);
-            double color = SECURE_RANDOM.nextDouble();
-            for (int step = 0; step < iterPerSample; ++step) {
-                Transformation transformation = variations.get(SECURE_RANDOM.nextInt(variations.size()));
-                point = transformation.apply(point);
-                color = (color + SECURE_RANDOM.nextDouble()) / 2.0;
-
-                applySymmetryAndColor(canvas, world, point, symmetry, colorGradient);
-            }
-        }
+        int start = 0;
+        processing(canvas, world, variations, iterPerSample, symmetry, colorGradient, start, samples);
 
         BrightnessNormalizer.normalize(canvas);
         return canvas;

@@ -2,10 +2,11 @@ package backend.academy.fractall_flame.transformations;
 
 import backend.academy.fractall_flame.config.Point;
 import java.awt.Color;
+import lombok.Getter;
 
 public class SphericalTransformation implements Transformation {
     static final double EPSILON = 1e-6;
-    private final double scale;
+    @Getter private final double scale;
 
     public SphericalTransformation(double scale) {
         this.scale = scale;

@@ -32,32 +32,18 @@ public class FractalImage {
     }
 
     public Pixel pixel(int x, int y) {
-        if (!contains(x, y)) {
-            exceptionMethod();
-        }
+        validateCoordinates(x, y);
         return data[y * width + x];
     }
 
-    private static void exceptionMethod() {
-        throw new IllegalArgumentException("Pixel out of bounds");
-    }
 
     public void setPixel(int x, int y, Pixel pixel) {
-        if (!contains(x, y)) {
-            exceptionMethod();
-        }
+        validateCoordinates(x, y);
         data[y * width + x] = pixel;
     }
 
-    // Добавление градиента (смешивание)
-    public void addColorGradient(ColorGradient gradient) {
-        this.colorGradient = gradient;
-    }
-
     public Color getColorAt(int x, int y, int iterations) {
-        if (!contains(x, y)) {
-            exceptionMethod();
-        }
+        validateCoordinates(x, y);
 
         Pixel pixel = pixel(x, y);
 
@@ -68,6 +54,12 @@ public class FractalImage {
 
         // Если градиент не задан, возвращаем цвет пикселя
         return new Color(pixel.r(), pixel.g(), pixel.b());
+    }
+
+    public void validateCoordinates(int x, int y) {
+        if (!(x >= 0 && x < width && y >= 0 && y < height)) {
+            throw new IllegalArgumentException("Pixel out of bounds");
+        }
     }
 
 }
