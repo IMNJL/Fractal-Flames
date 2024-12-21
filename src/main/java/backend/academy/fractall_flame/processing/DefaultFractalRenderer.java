@@ -10,7 +10,7 @@ import java.util.List;
 
 @SuppressWarnings({"PREDICTABLE_RANDOM", "ParameterNumber"})
 public abstract class DefaultFractalRenderer {
-    private final static SecureRandom SECURE_RANDOM = new SecureRandom(); // Singleton
+    public final static SecureRandom SECURE_RANDOM = new SecureRandom(); // Singleton
 
     public DefaultFractalRenderer(long seed) {
         SECURE_RANDOM.setSeed(seed);
@@ -26,7 +26,7 @@ public abstract class DefaultFractalRenderer {
         ColorGradient colorGradient
     );
 
-    public Point randomPoint(Rect world, SecureRandom random) {
+    public Point randomPoint(Rect world, SecureRandom SECURE_RANDOM) {
         if (world == null) {
             throw new IllegalArgumentException("World rectangle cannot be null");
         }

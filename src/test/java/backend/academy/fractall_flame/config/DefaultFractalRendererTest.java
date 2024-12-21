@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 import java.util.List;
+
+import static backend.academy.fractall_flame.processing.DefaultFractalRenderer.SECURE_RANDOM;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultFractalRendererTest {
@@ -31,12 +33,12 @@ class DefaultFractalRendererTest {
                 ColorGradient colorGradient
             ) {
                 for (int num = 0; num < samples; ++num) {
-                    Point point = randomPoint(world, secureRandom);
-                    double color = secureRandom.nextDouble();
+                    Point point = randomPoint(world, SECURE_RANDOM);
+                    double color = SECURE_RANDOM.nextDouble();
                     for (int step = 0; step < iterPerSample; ++step) {
-                        Transformation transformation = variations.get(secureRandom.nextInt(variations.size()));
+                        Transformation transformation = variations.get(SECURE_RANDOM.nextInt(variations.size()));
                         point = transformation.apply(point);
-                        color = (color + secureRandom.nextDouble()) / 2.0;
+                        color = (color + SECURE_RANDOM.nextDouble()) / 2.0;
 
                         applySymmetryAndColor(canvas, world, point, symmetry, colorGradient);
                     }

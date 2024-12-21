@@ -24,8 +24,7 @@ class FractalGeneratorTest {
 
     @BeforeEach
     void setUp() {
-        mockScanner = mock(Scanner.class);
-        generator = new FractalGenerator(mockScanner);
+        generator = new FractalGenerator();
     }
 
     @Test
